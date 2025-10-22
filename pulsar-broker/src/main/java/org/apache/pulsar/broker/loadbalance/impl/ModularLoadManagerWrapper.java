@@ -64,11 +64,6 @@ public class ModularLoadManagerWrapper implements LoadManager {
 
     @Override
     public Optional<ResourceUnit> getLeastLoaded(final ServiceUnitId serviceUnit) {
-        String bundleRange = LoadManagerShared.getBundleRangeFromBundleName(serviceUnit.toString());
-        String affinityBroker = loadManager.setNamespaceBundleAffinity(bundleRange, null);
-        if (!StringUtils.isBlank(affinityBroker)) {
-            return Optional.of(buildBrokerResourceUnit(affinityBroker));
-        }
         Optional<String> leastLoadedBroker = loadManager.selectBrokerForAssignment(serviceUnit);
         return leastLoadedBroker.map(this::buildBrokerResourceUnit);
     }

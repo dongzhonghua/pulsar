@@ -841,6 +841,11 @@ public class ModularLoadManagerImpl implements ModularLoadManager {
         try {
             synchronized (brokerCandidateCache) {
                 final String bundle = serviceUnit.toString();
+                final String bundleRange = LoadManagerShared.getBundleRangeFromBundleName(bundle);
+                final String affinityBroker = setNamespaceBundleAffinity(bundleRange, null);
+                if (StringUtils.isNotBlank(affinityBroker) && getAvailableBrokers().contains(affinityBroker)) {
+                    preallocatedBundleToBroker.put(bundle, affinityBroker);
+                }
                 if (preallocatedBundleToBroker.containsKey(bundle)) {
                     // If the given bundle is already in preallocated, return the selected broker.
                     return Optional.of(preallocatedBundleToBroker.get(bundle));
